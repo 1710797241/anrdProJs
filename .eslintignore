@@ -1,9 +1,3 @@
-/lambda/
+/functions/mock/**
 /scripts
 /config
-.history
-public
-dist
-.umi
-mock
-src/utils

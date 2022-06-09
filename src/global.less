@@ -1,5 +1,3 @@
-@import '~antd/es/style/variable.less';
-@import './custom-variable.less';
 html,
 body,
 #root {
@@ -13,10 +11,6 @@ body,
 .ant-layout {
   min-height: 100vh;
 }
-.ant-pro-sider.ant-layout-sider.ant-pro-sider-fixed {
-  left: unset;
-  background-color: @primary-background-color;
-}
 
 canvas {
   display: block;
@@ -28,63 +22,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.globalSpin {
+  width: 100%;
+  margin: 40px 0 !important;
+}
+
 ul,
 ol {
   list-style: none;
-}
-.ant-pro-sider-menu-icon {
-  width: 14px;
-  height: 14px;
-}
-@media (max-width: @screen-xs) {
-  .ant-table {
-    width: 100%;
-    overflow-x: auto;
-    &-thead > tr,
-    &-tbody > tr {
-      > th,
-      > td {
-        white-space: pre;
-        > span {
-          display: block;
-        }
-      }
-    }
-  }
-}
-
-// Compatible with IE11
-@media screen and(-ms-high-contrast: active), (-ms-high-contrast: none) {
-  body .ant-design-pro > .ant-layout {
-    min-height: 100vh;
-  }
-}
-
-.ant-page-header.has-breadcrumb {
-  padding: 0;
-}
-.ant-pro-page-container-children-content {
-  margin: 0;
-}
-//主题修改
-.ant-btn-default {
-  color: @primary-color;
-  border-color: @primary-color;
-}
-.ant-pagination-item-active a {
-  color: #fff;
-  &:hover {
-    color: #fff;
-  }
-}
-
-//表格自带搜索隐藏
-.ant-pro-table .ant-pro-table-search {
-  height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-.custom-icon {
-  display: flex;
-  align-items: center;
 }

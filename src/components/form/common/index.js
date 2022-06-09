@@ -2,7 +2,8 @@ import { Form, Input, Select, Button, DatePicker, Row, Col } from 'antd';
 const { Option } = Select;
 import WrappedFormItem from '../components/WrappedFormItem';
 const RangePicker = DatePicker.RangePicker;
-export const renderFormComponent = (item) => {
+export const renderFormComponent = (item, form, initialValues) => {
+  const { getFieldDecorator } = form;
   const { type, name, labelName, fieldProps, labelStyle } = item;
   switch (type) {
     case 'input':
@@ -19,7 +20,9 @@ export const renderFormComponent = (item) => {
             </span>
           }
         >
-          <Input />
+          {getFieldDecorator(`${name}`, {
+            initialValue: initialValues[name],
+          })(<Input />)}
         </WrappedFormItem>
       );
     case 'select':

@@ -1,80 +1,114 @@
 // https://umijs.org/config/
-import { defineConfig } from 'umi';
-import defaultSettings from './defaultSettings';
-import proxy from './proxy';
-import routes from './routes';
-import theme from './theme';
-import openAPI from './openAPI';
-const { REACT_APP_ENV } = process.env;
-export default defineConfig({
-  hash: true,
-  antd: {},
-  dva: {
-    hmr: true,
-  },
-  // ssr: {},
-  layout: {
-    // https://umijs.org/zh-CN/plugins/plugin-layout
-    locale: true,
-    siderWidth: 208,
-    ...defaultSettings,
-  },
-  // https://umijs.org/zh-CN/plugins/plugin-locale
-  locale: {
-    // default zh-CN
-    default: 'zh-CN',
-    antd: true,
-    // default true, when it is true, will use `navigator.language` overwrite default
-    baseNavigator: true,
-  },
-  dynamicImport: {
-    loading: '@ant-design/pro-layout/es/PageLoading',
-  },
-  // targets: {
-  //   ie: 11,
-  // },
-  // umi routes: https://umijs.org/docs/routing
-  routes,
-  access: {},
-  // Theme for antd: https://ant.design/docs/react/customize-theme-cn
-  theme,
+import os from 'os';
+import pageRoutes from './router.config';
+import webpackPlugin from './plugin.config';
+import defaultSettings from '../src/defaultSettings';
+import slash from 'slash2';
 
-  title: false,
+const plugins = [
+  [
+    'umi-plugin-react',
+    {
+      antd: true,
+      dva: {
+        hmr: true,
+      },
+      locale: {
+        enable: true, // default false
+        default: 'zh-CN', // default zh-CN
+        baseNavigator: true, // default true, when it is true, will use `navigator.language` overwrite default
+      },
+      dynamicImport: {
+        loadingComponent: './components/PageLoading/index',
+        webpackChunkName: true,
+      },
+      pwa: {
+        workboxPluginMode: 'InjectManifest',
+        workboxOptions: {
+          importWorkboxFrom: 'local',
+        },
+      },
+      ...(!process.env.TEST && os.platform() === 'darwin'
+        ? {
+            dll: {
+              include: ['dva', 'dva/router', 'dva/saga', 'dva/fetch'],
+              exclude: ['@babel/runtime'],
+            },
+            hardSource: false,
+          }
+        : {}),
+    },
+  ],
+];
+
+// 针对 preview.pro.ant.design 的 GA 统计代码
+// 业务上不需要这个
+if (process.env.APP_TYPE === 'site') {
+  plugins.push([
+    'umi-plugin-ga',
+    {
+      code: 'UA-72788897-6',
+    },
+  ]);
+}
+
+export default {
+  // add for transfer to umi
+  plugins,
+  define: {
+    APP_TYPE: process.env.APP_TYPE || '',
+  },
+  treeShaking: true,
+  targets: {
+    ie: 11,
+  },
+  // 路由配置
+  routes: pageRoutes,
+  // Theme for antd
+  // https://ant.design/docs/react/customize-theme-cn
+  theme: {
+    'primary-color': defaultSettings.primaryColor,
+  },
+  externals: {
+    '@antv/data-set': 'DataSet',
+  },
+  // proxy: {
+  //   '/server/api/': {
+  //     target: 'https://preview.pro.ant.design/',
+  //     changeOrigin: true,
+  //     pathRewrite: { '^/server': '' },
+  //   },
+  // },
   ignoreMomentLocale: true,
-  proxy: proxy[REACT_APP_ENV || 'dev'],
+  lessLoaderOptions: {
+    javascriptEnabled: true,
+  },
+  disableRedirectHoist: true,
+  cssLoaderOptions: {
+    modules: true,
+    getLocalIdent: (context, localIdentName, localName) => {
+      if (
+        context.resourcePath.includes('node_modules') ||
+        context.resourcePath.includes('ant.design.pro.less') ||
+        context.resourcePath.includes('global.less')
+      ) {
+        return localName;
+      }
+      const match = context.resourcePath.match(/src(.*)/);
+      if (match && match[1]) {
+        const antdProPath = match[1].replace('.less', '');
+        const arr = slash(antdProPath)
+          .split('/')
+          .map(a => a.replace(/([A-Z])/g, '-$1'))
+          .map(a => a.toLowerCase());
+        return `antd-pro${arr.join('-')}-${localName}`.replace(/--/g, '-');
+      }
+      return localName;
+    },
+  },
   manifest: {
     basePath: '/',
   },
-  // Fast Refresh 热更新
-  fastRefresh: {},
-  openAPI,
-  nodeModulesTransform: {
-    type: 'none',
-  },
-  // mfsu: {},
-  // webpack5: {},
-  exportStatic: {},
-  // chainWebpack(config, webpack) {
-  //   console.log(JSON.stringify(config));
-  // },
-  // terserOptions: {
-  //   compress: {
-  //     drop_console: true,
-  //   },
-  // },
-  // chunks: ['umi', 'vendors'],
-  // chainWebpack: (config) => {
-  //   config.optimization.splitChunks({
-  //     chunks: 'all',
-  //     minSize: 30000,
-  //     minChunks: 1,
-  //     cacheGroups: {
-  //       vendors: {
-  //         name: 'vendors',
-  //         test: /[\\/]node_modules[\\/]/,
-  //         priority: 0,
-  //       },
-  //     },
-  //   });
-  // },
-});
+
+  chainWebpack: webpackPlugin,
+};

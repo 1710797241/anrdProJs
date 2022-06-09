@@ -24,9 +24,10 @@ const ProTable = ({
   const searchFormRef = useRef();
   useEffect(() => {
     handdleSearchColumns();
+
     handleRequest({ current: 1 });
     handleActionRef();
-    formRef.current = searchFormRef.current;
+    console.log('searchFormRef', searchFormRef);
   }, []);
 
   const handleActionRef = () => {
@@ -63,12 +64,13 @@ const ProTable = ({
   };
 
   //分页
-  const handleChangeNumber = (page) => {
+  const handleChangeNumber = page => {
     handleRequest({ current: page, pageSize });
   };
   //收集表单
   const submit = () => {
-    searchFormRef?.current.validateFields().then((values) => {
+    searchFormRef?.current.validateFields().then(values => {
+      console.log('values', values);
       handleRequest({ current: 1, pageSize }, values);
     });
   };
@@ -81,7 +83,7 @@ const ProTable = ({
         params = { ...params, ...formValues, ...values };
       }
       console.log('params', params);
-      request(params).then((data) => {
+      request(params).then(data => {
         if (data.success) {
           setDataSource(data.data);
           setTotal(data.total);
@@ -96,8 +98,8 @@ const ProTable = ({
   //处理搜索列表
   const handdleSearchColumns = () => {
     const columnsForSearch = columns
-      .filter((item) => item.search !== false && item.type)
-      .map((item) => {
+      .filter(item => item.search !== false && item.type)
+      .map(item => {
         return {
           ...item,
           name: item.name || item.dataIndex,
@@ -112,6 +114,9 @@ const ProTable = ({
       <SearchForm
         searchColumns={searchColumns}
         searchFormRef={searchFormRef}
+        initialValues={{
+          name: 'hello',
+        }}
         span={3}
         toolBarRender={
           toolBarRender
@@ -122,6 +127,7 @@ const ProTable = ({
                   htmlType="reset"
                   key="reset"
                   onClick={() => {
+                    searchFormRef?.current.resetFields();
                     handleRequest({ current: 1, pageSize }, {}, true);
                   }}
                 >

@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Input, Select, Button, DatePicker, Row, Col } from 'antd';
 const { Option } = Select;
 import './index.less';
 import WrappedFormItem from './components/WrappedFormItem';
 import { renderFormComponent } from '@/components/Form/common/index';
 import { formArr } from '@/components/Form/common/index';
-const Demo = ({ labelStyle = {}, span, searchColumns, searchFormRef, toolBarRender }) => {
-  const onFinish = (values) => {
+const Demo = ({
+  labelStyle = {},
+  span,
+  searchColumns,
+  searchFormRef,
+  toolBarRender,
+  form,
+  initialValues,
+}) => {
+  const onFinish = values => {
     console.log('Received values from form: ', values);
   };
 
@@ -17,10 +25,13 @@ const Demo = ({ labelStyle = {}, span, searchColumns, searchFormRef, toolBarRend
 
     return Promise.reject(new Error('Price must be greater than zero!'));
   };
+  useEffect(() => {
+    console.log('searchColumns', searchColumns);
+    searchFormRef.current = form;
+  }, []);
 
   return (
     <Form
-      ref={searchFormRef}
       name="customized_form_controls"
       layout="inline"
       onFinish={onFinish}
@@ -41,14 +52,14 @@ const Demo = ({ labelStyle = {}, span, searchColumns, searchFormRef, toolBarRend
                   return (
                     // eslint-disable-next-line react/no-array-index-key
                     <div key={`${index}searchColumns`} className={'custom-col'}>
-                      {renderFormComponent(item)}
+                      {renderFormComponent(item, form, initialValues)}
                     </div>
                   );
                 })}
               {index1 == Math.ceil(searchColumns.length / span) - 1 ? (
                 <div key={`action`} className={'custom-col'}>
                   <WrappedFormItem>
-                    {toolBarRender ? toolBarRender.map((item) => item) : null}
+                    {toolBarRender ? toolBarRender.map(item => item) : null}
                   </WrappedFormItem>
                 </div>
               ) : null}
@@ -60,4 +71,4 @@ const Demo = ({ labelStyle = {}, span, searchColumns, searchFormRef, toolBarRend
   );
 };
 
-export default Demo;
+export default Form.create()(Demo);

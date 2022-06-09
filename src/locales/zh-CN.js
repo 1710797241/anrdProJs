@@ -1,24 +1,33 @@
-import component from './zh-CN/component';
+import analysis from './zh-CN/analysis';
+import exception from './zh-CN/exception';
+import form from './zh-CN/form';
 import globalHeader from './zh-CN/globalHeader';
+import login from './zh-CN/login';
 import menu from './zh-CN/menu';
-import pwa from './zh-CN/pwa';
+import monitor from './zh-CN/monitor';
+import result from './zh-CN/result';
 import settingDrawer from './zh-CN/settingDrawer';
 import settings from './zh-CN/settings';
-import pages from './zh-CN/pages';
+import pwa from './zh-CN/pwa';
+
 export default {
   'navBar.lang': '语言',
   'layout.user.link.help': '帮助',
   'layout.user.link.privacy': '隐私',
   'layout.user.link.terms': '条款',
-  'app.copyright.produced': '蚂蚁集团体验技术部出品',
-  'app.preview.down.block': '下载此页面到本地项目',
-  'app.welcome.link.fetch-blocks': '获取全部区块',
-  'app.welcome.link.block-list': '基于 block 开发，快速构建标准页面',
-  ...pages,
+  'app.home.introduce': '介绍',
+  'app.forms.basic.title': '基础表单',
+  'app.forms.basic.description':
+    '表单页用于向用户收集或验证信息，基础表单常见于数据项较少的表单场景。',
+  ...analysis,
+  ...exception,
+  ...form,
   ...globalHeader,
+  ...login,
   ...menu,
+  ...monitor,
+  ...result,
   ...settingDrawer,
   ...settings,
   ...pwa,
-  ...component,
 };
