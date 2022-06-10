@@ -1,6 +1,7 @@
 import { stringify } from 'qs';
 import request from '@/utils/request';
-
+export const CommonUpload = '';
+export const DeleteFile = '';
 export async function queryProjectNotice() {
   return request('/api/project/notice');
 }

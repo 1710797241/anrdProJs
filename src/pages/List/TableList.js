@@ -23,7 +23,7 @@ import {
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import ProTable from '@/components/Table';
+import ProTable from '@/components/CustomTable';
 import styles from './TableList.less';
 
 const FormItem = Form.Item;
@@ -292,7 +292,17 @@ class TableList extends PureComponent {
     {
       title: '规则名称',
       dataIndex: 'name',
-      type: 'input',
+      type: 'Input',
+      width: 100,
+      filedProps: {
+        required: true,
+      },
+      copyable: true,
+    },
+    {
+      title: '规则名称1',
+      dataIndex: 'name1',
+      type: 'Input',
     },
     {
       title: '描述',
@@ -336,7 +346,13 @@ class TableList extends PureComponent {
       title: '上次调度时间',
       dataIndex: 'updatedAt',
       sorter: true,
-      render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
+      width: 100,
+      ellipsisTooltip: {
+        lines: 1,
+      },
+      copyable: true,
+
+      format: 'YYYY-MM-DD HH:mm:ss',
     },
     {
       title: '操作',
@@ -611,12 +627,14 @@ class TableList extends PureComponent {
     );
   }
   handleRequest = async params => {
-    let searchParams = { ...params };
+    let searchParams = { ...params, currentPage: params.current };
+
     try {
       console.log('handleRequestsearchParams', searchParams);
       const { dispatch } = this.props;
       const data = await dispatch({
         type: 'rule/fetch',
+        payload: searchParams,
       });
       console.log('data', data);
       return {
@@ -666,6 +684,10 @@ class TableList extends PureComponent {
               searchFormRef={this.formRef}
               actionRef={this.actionRef}
               columns={this.columns}
+              paginationLeft={<div>12455</div>}
+              paginationStyle={{
+                justifyContent: 'space-between',
+              }}
             />
             {/* <StandardTable
               selectedRows={selectedRows}

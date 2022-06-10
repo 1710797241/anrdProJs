@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Select, Button, DatePicker, Row, Col } from 'antd';
 const { Option } = Select;
-import './index.less';
+import styles from './index.less';
 import WrappedFormItem from './components/WrappedFormItem';
-import { renderFormComponent } from '@/components/Form/common/index';
-import { formArr } from '@/components/Form/common/index';
+import { renderFormComponent } from '@/components/CustomForm/common/index';
+import { formArr } from '@/components/CustomForm/common/index';
+import classNames from 'classnames';
 const Demo = ({
   labelStyle = {},
   span,
@@ -33,7 +34,7 @@ const Demo = ({
   return (
     <Form
       name="customized_form_controls"
-      layout="inline"
+      formLayout="horizontal"
       onFinish={onFinish}
       initialValues={{
         price: {
@@ -51,13 +52,13 @@ const Demo = ({
                 item1.map((item, index) => {
                   return (
                     // eslint-disable-next-line react/no-array-index-key
-                    <div key={`${index}searchColumns`} className={'custom-col'}>
+                    <div key={`${index}searchColumns`} className={classNames(styles['custom-col'])}>
                       {renderFormComponent(item, form, initialValues)}
                     </div>
                   );
                 })}
               {index1 == Math.ceil(searchColumns.length / span) - 1 ? (
-                <div key={`action`} className={'custom-col'}>
+                <div key={`action`} className={classNames(styles['custom-col'])}>
                   <WrappedFormItem>
                     {toolBarRender ? toolBarRender.map(item => item) : null}
                   </WrappedFormItem>

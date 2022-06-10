@@ -1,12 +1,18 @@
-import { Table, Button, Pagination } from 'antd';
-import SearchForm from '@/components/Form/SearchForm';
+import { Table, Button, Pagination, Typography } from 'antd';
+import SearchForm from '@/components/CustomForm/SearchForm';
 import { useEffect, useRef, useState } from 'react';
-import './index.less';
+import styles from './index.less';
+import classNames from 'classnames';
+import { isEmpty, formatTime } from './utils';
+import EllipsisText from '@/components/Ellipsis';
+
 const ProTable = ({
   columns,
+  paginationStyle,
   pagination,
   paginationLeft,
   paginationRight,
+  columnEmptyText = '--',
   onChange,
   toolBarRender,
   search = true,
@@ -14,21 +20,74 @@ const ProTable = ({
   actionRef,
   formRef,
 }) => {
+  const [tableColumns, setTableColumns] = useState([]);
+
   const [searchColumns, setSearchColumns] = useState([]);
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(20);
+  const [pageSize, setPageSize] = useState(10);
   const [dataSource, setDataSource] = useState([]);
   const [formValues, setFormValues] = useState({});
 
   const [total, setTotal] = useState(0);
   const searchFormRef = useRef();
   useEffect(() => {
-    handdleSearchColumns();
-
-    handleRequest({ current: 1 });
+    handleSearchColumns();
+    handleTableColumns();
+    handleRequest({ current: 1, pageSize });
     handleActionRef();
     console.log('searchFormRef', searchFormRef);
   }, []);
+  //处理搜索列表
+  const handleSearchColumns = () => {
+    const columnsForSearch = columns
+      .filter(item => item.search !== false && item.type)
+      .map(item => {
+        return {
+          ...item,
+          name: item.name || item.dataIndex,
+          labelName: item.labelName || item.title,
+        };
+      });
+
+    setSearchColumns(columnsForSearch);
+  };
+
+  //处理表格列表
+  const handleTableColumns = () => {
+    const newColumns = columns
+      .filter(item => item.hideInTable !== true)
+      .map((item, index) => {
+        console.log(' item.render', item.render);
+        return {
+          ...item,
+          render:
+            item.render !== undefined
+              ? item.render
+              : (text, record) => {
+                  const newText = item.format ? formatTime(text, item.format) : text;
+
+                  if (isEmpty(record[item.dataIndex])) {
+                    return columnEmptyText;
+                  }
+                  return (
+                    <Typography.Text
+                      style={{ display: 'flex' }}
+                      copyable={item.copyable ? { text: newText } : null}
+                    >
+                      <EllipsisText
+                        tooltip={item.ellipsisTooltip}
+                        lines={item.ellipsisTooltip?.lines}
+                      >
+                        {newText}
+                      </EllipsisText>
+                    </Typography.Text>
+                  );
+                },
+        };
+      });
+
+    setTableColumns(newColumns);
+  };
 
   const handleActionRef = () => {
     //刷新reload
@@ -84,6 +143,7 @@ const ProTable = ({
       }
       console.log('params', params);
       request(params).then(data => {
+        console.log('handleRequest', data);
         if (data.success) {
           setDataSource(data.data);
           setTotal(data.total);
@@ -95,19 +155,6 @@ const ProTable = ({
       });
     }
   };
-  //处理搜索列表
-  const handdleSearchColumns = () => {
-    const columnsForSearch = columns
-      .filter(item => item.search !== false && item.type)
-      .map(item => {
-        return {
-          ...item,
-          name: item.name || item.dataIndex,
-          labelName: item.labelName || item.title,
-        };
-      });
-    setSearchColumns(columnsForSearch);
-  };
 
   return (
     <div>
@@ -115,7 +162,7 @@ const ProTable = ({
         searchColumns={searchColumns}
         searchFormRef={searchFormRef}
         initialValues={{
-          name: 'hello',
+          name1: 'hello',
         }}
         span={3}
         toolBarRender={
@@ -139,16 +186,17 @@ const ProTable = ({
               ]
         }
       />
-      <Table columns={columns} dataSource={dataSource} pagination={false} />
+      <Table columns={tableColumns} dataSource={dataSource} pagination={false} />
       {dataSource.length ? (
-        <div className={'custom-pagination-container'}>
+        <div className={classNames(styles['custom-pagination-container'])} style={paginationStyle}>
           {paginationLeft ? paginationLeft : null}
           <div>
             <Pagination
-              {...pagination}
+              pageSize={pageSize}
               current={current}
               total={total}
               onChange={handleChangeNumber}
+              {...pagination}
             />
           </div>
           {paginationRight ? paginationRight : null}
