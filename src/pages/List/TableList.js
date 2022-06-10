@@ -145,6 +145,7 @@ class UpdateForm extends PureComponent {
       {
         labelName: '规则描述',
         name: 'desc',
+        type: 'Upload',
       },
     ];
     const { form } = this.props;

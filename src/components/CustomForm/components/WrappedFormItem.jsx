@@ -3,7 +3,7 @@ import { Form, Input, Select, Button } from 'antd';
 const { Option } = Select;
 export default ({ children, label, name }) => {
   return (
-    <Form.Item name={name} label={label}>
+    <Form.Item name={name} label={label} required={false}>
       {children}
     </Form.Item>
   );
