@@ -5,7 +5,7 @@ const PriceInput = ({ value = {}, onChange }) => {
   const [number, setNumber] = useState(0);
   const [currency, setCurrency] = useState('rmb');
 
-  const triggerChange = (changedValue) => {
+  const triggerChange = changedValue => {
     onChange?.({
       number,
       currency,
@@ -14,7 +14,7 @@ const PriceInput = ({ value = {}, onChange }) => {
     });
   };
 
-  const onNumberChange = (e) => {
+  const onNumberChange = e => {
     const newNumber = parseInt(e.target.value || '0', 10);
 
     if (Number.isNaN(number)) {
@@ -30,7 +30,7 @@ const PriceInput = ({ value = {}, onChange }) => {
     });
   };
 
-  const onCurrencyChange = (newCurrency) => {
+  const onCurrencyChange = newCurrency => {
     if (!('currency' in value)) {
       setCurrency(newCurrency);
     }
