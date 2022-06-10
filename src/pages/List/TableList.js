@@ -26,7 +26,7 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import ProTable from '@/components/CustomTable';
 import styles from './TableList.less';
 import { renderFormComponent } from '@/components/CustomForm/common';
-
+import PriceInput from '@/components/CustomForm/CustomInputSelect';
 const FormItem = Form.Item;
 const { Step } = Steps;
 const { TextArea } = Input;
@@ -299,7 +299,8 @@ class TableList extends PureComponent {
     {
       title: '规则',
       dataIndex: 'name',
-      type: 'Input',
+      type: 'custom',
+      Component: PriceInput,
       width: 100,
       labelStyle: {
         width: 200,
@@ -692,8 +693,11 @@ class TableList extends PureComponent {
           <div className={styles.tableList}>
             <ProTable
               request={this.handleRequest}
-              pagination={{
+              paginationProps={{
                 size: 'small',
+              }}
+              tableProps={{
+                rowSelection: {},
               }}
               searchFormRef={this.formRef}
               actionRef={this.actionRef}

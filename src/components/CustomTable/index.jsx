@@ -9,11 +9,11 @@ import EllipsisText from '@/components/Ellipsis';
 const ProTable = ({
   columns,
   paginationStyle,
-  pagination,
+  paginationProps,
   paginationLeft,
   paginationRight,
   columnEmptyText = '--',
-  onChange,
+  tableProps = {},
   toolBarRender,
   search = true,
   request,
@@ -36,7 +36,6 @@ const ProTable = ({
     handleTableColumns();
     handleRequest({ current: 1, pageSize });
     handleActionRef();
-    console.log('searchFormRef', searchFormRef);
   }, []);
   //处理搜索列表
   const handleSearchColumns = () => {
@@ -58,7 +57,6 @@ const ProTable = ({
     const newColumns = columns
       .filter(item => item.hideInTable !== true)
       .map((item, index) => {
-        console.log(' item.render', item.render);
         return {
           ...item,
           render:
@@ -185,7 +183,7 @@ const ProTable = ({
               ]
         }
       />
-      <Table columns={tableColumns} dataSource={dataSource} pagination={false} />
+      <Table {...tableProps} columns={tableColumns} dataSource={dataSource} pagination={false} />
       {dataSource.length ? (
         <div className={classNames(styles['custom-pagination-container'])} style={paginationStyle}>
           {paginationLeft ? paginationLeft : null}
@@ -195,7 +193,7 @@ const ProTable = ({
               current={current}
               total={total}
               onChange={handleChangeNumber}
-              {...pagination}
+              {...paginationProps}
             />
           </div>
           {paginationRight ? paginationRight : null}

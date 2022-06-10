@@ -56,7 +56,9 @@ export const renderFormComponent = (item, form, initialValues = {}) => {
     inline = false,
     style = {},
     inlineStyle = {},
+    Component,
   } = item;
+
   let styles = { width: fieldProps?.width || '100%' };
   fieldProps.rules = fieldProps?.rules || [
     { required: !!fieldProps?.required, message: '此为必填' },
@@ -66,6 +68,26 @@ export const renderFormComponent = (item, form, initialValues = {}) => {
     : {};
   styles = Object.assign(styles, readonlySyle, style);
   switch (type) {
+    case 'custom':
+      return (
+        <WrappedFormItem
+          name={name + 'custom'}
+          label={renderLabel(fieldProps, labelStyle, labelName)}
+        >
+          {getFieldDecorator(`${name}`, {
+            initialValue: initialValues[name],
+
+            rules: fieldProps?.rules || [],
+          })(
+            <Component
+              suffix={suffix}
+              style={{ ...styles }}
+              disabled={!!disabled}
+              {...fieldProps}
+            />
+          )}
+        </WrappedFormItem>
+      );
     case 'Input':
       return (
         <WrappedFormItem name={name} label={renderLabel(fieldProps, labelStyle, labelName)}>
