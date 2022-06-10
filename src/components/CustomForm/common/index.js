@@ -20,7 +20,7 @@ import CustomUpload from '../CustomIUpload';
 import styles from './index.less';
 const { TextArea } = Input;
 const RangePicker = DatePicker.RangePicker;
-const renderRequired = fieldProps =>
+const renderRequired = (fieldProps) =>
   fieldProps?.required && <span style={{ color: 'red' }}>*</span>;
 
 const renderLabel = (fieldProps, labelStyle, labelName) => (
@@ -40,6 +40,14 @@ const renderLabel = (fieldProps, labelStyle, labelName) => (
 /**
  *
  * @param {*} item
+ * name:字段名
+ * type:组件类型
+ * labelName:标签名
+ * labelStyle:标签css
+ * disabled & readonly 禁用选择只读样式,
+ * inline-- inlineStyle-upload 专用
+ * fieldProps:表单属性
+ * style 表单css
  * @returns
  */
 export const renderFormComponent = (item, form, initialValues = {}) => {
@@ -52,7 +60,6 @@ export const renderFormComponent = (item, form, initialValues = {}) => {
     labelStyle,
     disabled,
     readonly,
-    suffix,
     inline = false,
     style = {},
     inlineStyle = {},
@@ -78,14 +85,7 @@ export const renderFormComponent = (item, form, initialValues = {}) => {
             initialValue: initialValues[name],
 
             rules: fieldProps?.rules || [],
-          })(
-            <Component
-              suffix={suffix}
-              style={{ ...styles }}
-              disabled={!!disabled}
-              {...fieldProps}
-            />
-          )}
+          })(<Component style={{ ...styles }} disabled={!!disabled} {...fieldProps} />)}
         </WrappedFormItem>
       );
     case 'Input':
@@ -95,7 +95,7 @@ export const renderFormComponent = (item, form, initialValues = {}) => {
             initialValue: initialValues[name],
 
             rules: fieldProps?.rules || [],
-          })(<Input suffix={suffix} style={{ ...styles }} disabled={!!disabled} {...fieldProps} />)}
+          })(<Input style={{ ...styles }} disabled={!!disabled} {...fieldProps} />)}
         </WrappedFormItem>
       );
     case 'InputSelect':
