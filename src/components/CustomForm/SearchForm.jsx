@@ -7,13 +7,13 @@ import { renderFormComponent } from '@/components/CustomForm/common/index';
 import { formArr } from '@/components/CustomForm/common/index';
 import classNames from 'classnames';
 const Demo = ({
-  labelStyle = {},
   span,
   searchColumns,
   searchFormRef,
   toolBarRender,
   form,
   initialValues,
+  layout = 'inline',
 }) => {
   const onFinish = values => {
     console.log('Received values from form: ', values);
@@ -32,22 +32,12 @@ const Demo = ({
   }, []);
 
   return (
-    <Form
-      name="customized_form_controls"
-      formLayout="horizontal"
-      onFinish={onFinish}
-      initialValues={{
-        price: {
-          number: 0,
-          currency: 'rmb',
-        },
-      }}
-    >
+    <Form name="customized_form_controls" layout={layout}>
       <div>
         {formArr(searchColumns, span || 3).map((item1, index1) => {
           return (
             // eslint-disable-next-line react/no-array-index-key
-            <div key={`${index1}searchColumns`} className={'custom-row'}>
+            <div key={`${index1}searchColumns`} className={classNames(styles['custom-row'])}>
               {searchColumns &&
                 item1.map((item, index) => {
                   return (

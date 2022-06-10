@@ -1,6 +1,5 @@
 import { commonFormUpload } from '@/utils/upload';
-import { PlusOutlined } from '@ant-design/icons';
-import { Col, message, Modal, Row, Upload } from 'antd';
+import { Col, message, Modal, Row, Upload, Icon } from 'antd';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 const ProxyAPi = {
@@ -173,13 +172,13 @@ export default props => {
                 </div>
               ) : fileList.length > 0 ? (
                 <div>
-                  {props.icon ? props.icon : <PlusOutlined />}
+                  {props.icon ? props.icon : <Icon type="PlusOutlined" />}
 
                   <div>上传{text}</div>
                 </div>
               ) : (
                 <div>
-                  {props.icon ? props.icon : <PlusOutlined />}
+                  {props.icon ? props.icon : <Icon type="PlusOutlined" />}
                   <div>上传{text}</div>
                 </div>
               )}

@@ -19,6 +19,7 @@ const ProTable = ({
   request,
   actionRef,
   formRef,
+  initialValues = {},
 }) => {
   const [tableColumns, setTableColumns] = useState([]);
 
@@ -161,9 +162,7 @@ const ProTable = ({
       <SearchForm
         searchColumns={searchColumns}
         searchFormRef={searchFormRef}
-        initialValues={{
-          name1: 'hello',
-        }}
+        initialValues={initialValues}
         span={3}
         toolBarRender={
           toolBarRender

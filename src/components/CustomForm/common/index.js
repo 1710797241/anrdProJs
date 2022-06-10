@@ -20,15 +20,14 @@ import CustomUpload from '../CustomIUpload';
 import styles from './index.less';
 const { TextArea } = Input;
 const RangePicker = DatePicker.RangePicker;
-
 const renderRequired = fieldProps =>
   fieldProps?.required && <span style={{ color: 'red' }}>*</span>;
 
 const renderLabel = (fieldProps, labelStyle, labelName) => (
-  <span className="custom-label-container">
+  <span className={classNames(styles['custom-label-container'])}>
     {fieldProps?.justify && renderRequired(fieldProps)}
     <span
-      className={classNames(fieldProps?.justify ? 'custom-label' : '')}
+      className={classNames(fieldProps?.justify ? styles['custom-label'] : '')}
       style={{
         ...labelStyle,
       }}
@@ -43,13 +42,13 @@ const renderLabel = (fieldProps, labelStyle, labelName) => (
  * @param {*} item
  * @returns
  */
-export const renderFormComponent = (item, form, initialValues) => {
+export const renderFormComponent = (item, form, initialValues = {}) => {
   const { getFieldDecorator } = form;
   const {
     type,
     name,
     labelName,
-    fieldProps,
+    fieldProps = {},
     labelStyle,
     disabled,
     readonly,
@@ -59,7 +58,9 @@ export const renderFormComponent = (item, form, initialValues) => {
     inlineStyle = {},
   } = item;
   let styles = { width: fieldProps?.width || '100%' };
-
+  fieldProps.rules = fieldProps?.rules || [
+    { required: !!fieldProps?.required, message: '此为必填' },
+  ];
   let readonlySyle = readonly
     ? { backgroundColor: '#fff', cursor: 'default', color: '#0E2949' }
     : {};
@@ -67,37 +68,30 @@ export const renderFormComponent = (item, form, initialValues) => {
   switch (type) {
     case 'Input':
       return (
-        <WrappedFormItem
-          name={name}
-          rules={fieldProps?.rules || []}
-          label={renderLabel(fieldProps, labelStyle, labelName)}
-        >
+        <WrappedFormItem name={name} label={renderLabel(fieldProps, labelStyle, labelName)}>
           {getFieldDecorator(`${name}`, {
             initialValue: initialValues[name],
+
+            rules: fieldProps?.rules || [],
           })(<Input suffix={suffix} style={{ ...styles }} disabled={!!disabled} {...fieldProps} />)}
         </WrappedFormItem>
       );
     case 'InputSelect':
       return (
-        <WrappedFormItem
-          name={name}
-          rules={fieldProps?.rules || []}
-          label={renderLabel(fieldProps, labelStyle, labelName)}
-        >
+        <WrappedFormItem name={name} label={renderLabel(fieldProps, labelStyle, labelName)}>
           {getFieldDecorator(`${name}`, {
             initialValue: initialValues[name],
+
+            rules: fieldProps?.rules || [],
           })(<CustomInput style={{ ...styles }} disabled={!!disabled} {...fieldProps} />)}
         </WrappedFormItem>
       );
     case 'Cascader':
       return (
-        <WrappedFormItem
-          name={name}
-          rules={fieldProps?.rules || []}
-          label={renderLabel(fieldProps, labelStyle, labelName)}
-        >
+        <WrappedFormItem name={name} label={renderLabel(fieldProps, labelStyle, labelName)}>
           {getFieldDecorator(`${name}`, {
             initialValue: initialValues[name],
+            rules: fieldProps?.rules || [],
           })(<Cascader style={{ ...styles }} disabled={!!disabled} {...fieldProps} />)}
         </WrappedFormItem>
       );
@@ -107,23 +101,20 @@ export const renderFormComponent = (item, form, initialValues) => {
           name={name}
           inline={inline}
           inlineStyle={inlineStyle}
-          rules={fieldProps?.rules || []}
           label={renderLabel(fieldProps, labelStyle, labelName)}
         >
           {getFieldDecorator(`${name}`, {
             initialValue: initialValues[name],
+            rules: fieldProps?.rules || [],
           })(<CustomUpload style={styles} {...fieldProps} />)}
         </WrappedFormItem>
       );
     case 'InputNumber':
       return (
-        <WrappedFormItem
-          name={name}
-          rules={fieldProps?.rules || []}
-          label={renderLabel(fieldProps, labelStyle, labelName)}
-        >
+        <WrappedFormItem name={name} label={renderLabel(fieldProps, labelStyle, labelName)}>
           {getFieldDecorator(`${name}`, {
             initialValue: initialValues[name],
+            rules: fieldProps?.rules || [],
           })(
             <InputNumber
               placeholder={fieldProps.placeholder || ''}
@@ -136,157 +127,118 @@ export const renderFormComponent = (item, form, initialValues) => {
       );
     case 'TextArea':
       return (
-        <WrappedFormItem
-          name={name}
-          rules={fieldProps?.rules || []}
-          label={renderLabel(fieldProps, labelStyle, labelName)}
-        >
+        <WrappedFormItem name={name} label={renderLabel(fieldProps, labelStyle, labelName)}>
           {getFieldDecorator(`${name}`, {
             initialValue: initialValues[name],
+            rules: fieldProps?.rules || [],
           })(<TextArea style={styles} disabled={!!disabled} {...fieldProps} />)}
         </WrappedFormItem>
       );
     case 'Select':
       return (
-        <WrappedFormItem
-          name={name}
-          rules={fieldProps?.rules || []}
-          label={renderLabel(fieldProps, labelStyle, labelName)}
-        >
+        <WrappedFormItem name={name} label={renderLabel(fieldProps, labelStyle, labelName)}>
           {getFieldDecorator(`${name}`, {
             initialValue: initialValues[name],
+            rules: fieldProps?.rules || [],
           })(<Select disabled={!!disabled} style={styles} {...fieldProps} />)}
         </WrappedFormItem>
       );
     case 'Checkbox':
       return (
-        <WrappedFormItem
-          name={name}
-          rules={fieldProps?.rules || []}
-          label={renderLabel(fieldProps, labelStyle, labelName)}
-        >
+        <WrappedFormItem name={name} label={renderLabel(fieldProps, labelStyle, labelName)}>
           {getFieldDecorator(`${name}`, {
             initialValue: initialValues[name],
+            rules: fieldProps?.rules || [],
           })(<Checkbox.Group disabled={!!disabled} style={styles} {...fieldProps} />)}
         </WrappedFormItem>
       );
     case 'Radio':
       return (
-        <WrappedFormItem
-          name={name}
-          rules={fieldProps?.rules || []}
-          label={renderLabel(fieldProps, labelStyle, labelName)}
-        >
+        <WrappedFormItem name={name} label={renderLabel(fieldProps, labelStyle, labelName)}>
           {getFieldDecorator(`${name}`, {
             initialValue: initialValues[name],
+            rules: fieldProps?.rules || [],
           })(<Radio.Group disabled={!!disabled} style={styles} {...fieldProps} />)}
         </WrappedFormItem>
       );
     case 'Tree':
       return (
-        <WrappedFormItem
-          name={name}
-          rules={fieldProps?.rules || []}
-          label={renderLabel(fieldProps, labelStyle, labelName)}
-        >
+        <WrappedFormItem name={name} label={renderLabel(fieldProps, labelStyle, labelName)}>
           {getFieldDecorator(`${name}`, {
             initialValue: initialValues[name],
+            rules: fieldProps?.rules || [],
           })(<Tree disabled={!!disabled} style={styles} {...fieldProps} />)}
         </WrappedFormItem>
       );
     case 'TreeSelect':
       return (
-        <WrappedFormItem
-          name={name}
-          rules={fieldProps?.rules || []}
-          label={renderLabel(fieldProps, labelStyle, labelName)}
-        >
+        <WrappedFormItem name={name} label={renderLabel(fieldProps, labelStyle, labelName)}>
           {getFieldDecorator(`${name}`, {
             initialValue: initialValues[name],
+            rules: fieldProps?.rules || [],
           })(<TreeSelect disabled={!!disabled} style={styles} {...fieldProps} />)}
         </WrappedFormItem>
       );
     case 'Rate':
       return (
-        <WrappedFormItem
-          name={name}
-          rules={fieldProps?.rules || []}
-          label={renderLabel(fieldProps, labelStyle, labelName)}
-        >
+        <WrappedFormItem name={name} label={renderLabel(fieldProps, labelStyle, labelName)}>
           {getFieldDecorator(`${name}`, {
             initialValue: initialValues[name],
+            rules: fieldProps?.rules || [],
           })(<Rate disabled={!!disabled} style={styles} {...fieldProps} />)}
         </WrappedFormItem>
       );
     case 'Switch':
       return (
-        <WrappedFormItem
-          name={name}
-          rules={fieldProps?.rules || []}
-          label={renderLabel(fieldProps, labelStyle, labelName)}
-        >
+        <WrappedFormItem name={name} label={renderLabel(fieldProps, labelStyle, labelName)}>
           {getFieldDecorator(`${name}`, {
             initialValue: initialValues[name],
+            rules: fieldProps?.rules || [],
           })(<Switch disabled={!!disabled} style={styles} {...fieldProps} />)}
         </WrappedFormItem>
       );
     case 'Slider':
       return (
-        <WrappedFormItem
-          name={name}
-          rules={fieldProps?.rules || []}
-          label={renderLabel(fieldProps, labelStyle, labelName)}
-        >
+        <WrappedFormItem name={name} label={renderLabel(fieldProps, labelStyle, labelName)}>
           {getFieldDecorator(`${name}`, {
             initialValue: initialValues[name],
+            rules: fieldProps?.rules || [],
           })(<Slider disabled={!!disabled} style={styles} {...fieldProps} />)}
         </WrappedFormItem>
       );
     case 'TimePicker':
       return (
-        <WrappedFormItem
-          name={name}
-          rules={fieldProps?.rules || []}
-          label={renderLabel(fieldProps, labelStyle, labelName)}
-        >
+        <WrappedFormItem name={name} label={renderLabel(fieldProps, labelStyle, labelName)}>
           {getFieldDecorator(`${name}`, {
             initialValue: initialValues[name],
+            rules: fieldProps?.rules || [],
           })(<TimePicker disabled={!!disabled} style={styles} {...fieldProps} />)}
         </WrappedFormItem>
       );
     case 'DatePicker':
       return (
-        <WrappedFormItem
-          name={name}
-          rules={fieldProps?.rules || []}
-          label={renderLabel(fieldProps, labelStyle, labelName)}
-        >
+        <WrappedFormItem name={name} label={renderLabel(fieldProps, labelStyle, labelName)}>
           {getFieldDecorator(`${name}`, {
             initialValue: initialValues[name],
+            rules: fieldProps?.rules || [],
           })(<DatePicker disabled={!!disabled} style={styles} {...fieldProps} />)}
         </WrappedFormItem>
       );
     case 'RangePicker':
       return (
-        <WrappedFormItem
-          name={name}
-          rules={fieldProps?.rules || []}
-          label={renderLabel(fieldProps, labelStyle, labelName)}
-        >
+        <WrappedFormItem name={name} label={renderLabel(fieldProps, labelStyle, labelName)}>
           {getFieldDecorator(`${name}`, {
             initialValue: initialValues[name],
+            rules: fieldProps?.rules || [],
           })(<RangePicker disabled={!!disabled} style={styles} {...fieldProps} />)}
         </WrappedFormItem>
       );
     default:
       return (
-        <WrappedFormItem
-          name={name}
-          rules={fieldProps?.rules || []}
-          label={renderLabel(fieldProps, labelStyle, labelName)}
-        >
+        <WrappedFormItem name={name} label={renderLabel(fieldProps, labelStyle, labelName)}>
           {getFieldDecorator(`${name}`, {
             initialValue: initialValues[name],
+            rules: fieldProps?.rules || [],
           })(<Input style={styles} disabled={!!disabled} {...fieldProps} />)}
         </WrappedFormItem>
       );

@@ -25,6 +25,7 @@ import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import ProTable from '@/components/CustomTable';
 import styles from './TableList.less';
+import { renderFormComponent } from '@/components/CustomForm/common';
 
 const FormItem = Form.Item;
 const { Step } = Steps;
@@ -99,6 +100,7 @@ class UpdateForm extends PureComponent {
     const { form, handleUpdate } = this.props;
     const { formVals: oldValue } = this.state;
     form.validateFields((err, fieldsValue) => {
+      console.log('fieldsValue', fieldsValue);
       if (err) return;
       const formVals = { ...oldValue, ...fieldsValue };
       this.setState(
@@ -131,6 +133,20 @@ class UpdateForm extends PureComponent {
   };
 
   renderContent = (currentStep, formVals) => {
+    const columns = [
+      {
+        labelName: '规则',
+        name: 'name',
+        fieldProps: {
+          justify: 1,
+          required: true,
+        },
+      },
+      {
+        labelName: '规则描述',
+        name: 'desc',
+      },
+    ];
     const { form } = this.props;
     if (currentStep === 1) {
       return [
@@ -192,20 +208,10 @@ class UpdateForm extends PureComponent {
         </FormItem>,
       ];
     }
-    return [
-      <FormItem key="name" {...this.formLayout} label="规则名称">
-        {form.getFieldDecorator('name', {
-          rules: [{ required: true, message: '请输入规则名称！' }],
-          initialValue: formVals.name,
-        })(<Input placeholder="请输入" />)}
-      </FormItem>,
-      <FormItem key="desc" {...this.formLayout} label="规则描述">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
-          initialValue: formVals.desc,
-        })(<TextArea rows={4} placeholder="请输入至少五个字符" />)}
-      </FormItem>,
-    ];
+    const formList = columns.map((item, index) => {
+      return <div key={`${index}searchColumns`}>{renderFormComponent(item, form, {})}</div>;
+    });
+    return <div style={{ width: 500 }}>{formList}</div>;
   };
 
   renderFooter = currentStep => {
@@ -290,17 +296,21 @@ class TableList extends PureComponent {
 
   columns = [
     {
-      title: '规则名称',
+      title: '规则',
       dataIndex: 'name',
       type: 'Input',
       width: 100,
-      filedProps: {
+      labelStyle: {
+        width: 200,
+      },
+      fieldProps: {
         required: true,
+        justify: 1,
       },
       copyable: true,
     },
     {
-      title: '规则名称1',
+      title: '规则名称',
       dataIndex: 'name1',
       type: 'Input',
     },
@@ -681,10 +691,13 @@ class TableList extends PureComponent {
           <div className={styles.tableList}>
             <ProTable
               request={this.handleRequest}
+              pagination={{
+                size: 'small',
+              }}
               searchFormRef={this.formRef}
               actionRef={this.actionRef}
               columns={this.columns}
-              paginationLeft={<div>12455</div>}
+              paginationLeft={<div />}
               paginationStyle={{
                 justifyContent: 'space-between',
               }}
