@@ -24,7 +24,7 @@ export const layout = ({
     navTheme: 'dark',
     headerTheme: 'dark',
     // splitMenus: true,
-    // siderWidth: 200,
+    siderWidth: 200,
     // 默认布局调整
     rightContentRender: false,
     footerRender: false,

@@ -4,6 +4,6 @@ export default {
   menu: {
     locale: false,
   },
-  title: 'yiyi-dao',
+  title: 'yiyi-da',
   
 }
