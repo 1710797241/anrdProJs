@@ -21,5 +21,4 @@ export default defineConfig({
   proxy:proxy.dev,
   npmClient: "pnpm",
   tailwindcss: {},
- 
 });
