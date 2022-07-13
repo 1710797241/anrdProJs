@@ -19,21 +19,16 @@ export const layout = ({
   initialState: { settings?: LayoutSettings; currentUser?: API.CurrentUser };
 }): BasicLayoutProps => {
   return {
-    // 常用属性
-    title: 'Ant Design',
-    layout:'side',
-    logo: 'https://img.alicdn.com/tfs/TB1YHEpwUT1gK0jSZFhXXaAtVXa-28-27.svg',
-    navTheme:'dark',
-    headerTheme:'dark',
-    fixedHeader:false,
-    settings:{
-      enableDarkTheme:true
-    },
-    contentStyle:{margin:'16px',backgroundColor:'#ddd',minHeight:'calc(100vh - 32px)'},
+    layout: 'side',
+    theme: 'dark',
+    navTheme: 'dark',
+    headerTheme: 'dark',
+    // splitMenus: true,
+    // siderWidth: 200,
     // 默认布局调整
-    rightContentRender:false,
-    // footerRender: () =>false,
-    // menuHeaderRender: undefined,
+    rightContentRender: false,
+    footerRender: false,
+    menuHeaderRender: undefined,
  
     // 其他属性见：https://procomponents.ant.design/components/layout#prolayout
   };
