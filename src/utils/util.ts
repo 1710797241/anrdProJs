@@ -296,3 +296,8 @@ export function arrTrans(num:number, list:any[]) {
   });
   return arr2d;
 }
+
+
+export const IsNoExist = (path:string,arr:any[])=>{
+  return true
+}

@@ -1,12 +1,27 @@
 import Guide from '@/components/Guide';
 import { trim } from '@/utils/format';
 import { PageContainer } from '@ant-design/pro-components';
-import { useModel } from '@umijs/max';
-import { Button } from 'antd';
+import { useModel,request } from '@umijs/max';
+import { Button, message } from 'antd';
+import { useEffect } from 'react';
 import styles from './index.less';
 
 const HomePage: React.FC = () => {
   const { name } = useModel('global');
+  useEffect(()=>{
+    handleRequest()
+  },[])
+  const handleRequest = async()=>{
+   try {
+    const data = await request("https://open.feishu.cn/open-apis/mina/v2/tokenLoginValidate")
+    console.log('success==>',data);
+    
+   } catch (error:any) {   
+     console.log('error==>',error);
+
+    message.error(error.message||error)
+   }
+  }
   return (
     <PageContainer ghost>
       <div className={styles.container}>

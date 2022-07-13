@@ -4,6 +4,7 @@ import {
   BasicLayoutProps,
   Settings as LayoutSettings,
 } from '@ant-design/pro-layout';
+export { default as request } from './utils/request';
 // 运行时配置
 
 // 全局初始化数据配置，用于 Layout 用户信息和权限初始化
@@ -33,3 +34,5 @@ export const layout = ({
     // 其他属性见：https://procomponents.ant.design/components/layout#prolayout
   };
 };
+
+ 
