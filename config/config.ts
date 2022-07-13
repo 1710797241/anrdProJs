@@ -3,7 +3,7 @@ import routes from "./routes";
 import theme from "./theme";
 import proxy from "./proxy";
 import defaultSettings from './defaultSettings'
-console.log(process.env.NODE_ENV);
+
 
 export default defineConfig({
   antd: {},
